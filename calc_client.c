@@ -1,31 +1,40 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 
-int main() {
-    int sockfd, a, b, res;
-    char op;
+#define port 7070
+
+int main(){
+    int sock_fd;
     struct sockaddr_in servaddr;
+    sock_fd=socket(AF_INET,SOCK_STREAM,0);
+    servaddr.sin_family=AF_INET;
+    servaddr.sin_port=htons(port);
+    servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(9001);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
+    connect(sock_fd,(struct sockaddr*)&servaddr,sizeof(servaddr));
 
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 
-    printf("Enter two integers: ");
+    int a,b;
+    char op;
+    int result;
+
+   printf("Enter two integers: ");
     scanf("%d %d", &a, &b);
-    printf("Enter operator (+ - * /): ");
-    scanf(" %c", &op);
+    getchar(); // consume leftover newline
+    printf("Enter operator (+, -, *, /): ");
+    scanf("%c", &op);
 
-    write(sockfd, &a, sizeof(a));
-    write(sockfd, &b, sizeof(b));
-    write(sockfd, &op, sizeof(op));
+    write(sock_fd,&a,sizeof(a));
+    write(sock_fd,&b,sizeof(b));
+    write(sock_fd,&op,sizeof(op));
 
-    read(sockfd, &res, sizeof(res));
-    printf("Result = %d\n", res);
 
-    close(sockfd);
+    read(sock_fd,&result,sizeof(result));
+    printf("result:%d",result);
+
+    close(sock_fd);
     return 0;
 }

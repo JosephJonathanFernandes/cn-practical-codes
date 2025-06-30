@@ -21,31 +21,24 @@ int main(){
 
     client_fd=accept(server_fd,NULL,NULL);
 
-    int n,arr[100],swapped,t;
+    int key,n,arr[100],found=0,index=-1;
     
     read(client_fd,&n,sizeof(n));
 
     read(client_fd,arr,n*sizeof(int));
 
+    read(client_fd,&key,sizeof(key));
 
     for(int i=0;i<n;i++){
-        swapped=0;
-        for(int j=0;j<n-i-1;j++){
-            if(arr[j]>arr[j+1]){
-                t=arr[j];
-                arr[j]=arr[j+1];
-                arr[j+1]=t;
-                swapped=1;
-
-            }
-            
-        }
-        if(!swapped)
+        if(arr[i]==key){
+            found=1;
+             index=i;
             break;
+        }
     }
 
-    write(client_fd,arr,n*sizeof(int));
-    
+    write(client_fd,&found,sizeof(found));
+    write(client_fd,&index,sizeof(index));
 
     close(client_fd);
     close(server_fd);
