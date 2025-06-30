@@ -6,22 +6,23 @@
 #define PORT 6767
 
 int main() {
-    int sock = socket(AF_INET, SOCK_DGRAM, 0);
-    struct sockaddr_in server = {AF_INET, htons(PORT)};
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
+    int sock=socket(AF_INET,SOCK_DGRAM,0);
+    struct sockaddr_in server={AF_INET,htons(port)};
+    server.sin_addr.s_addr=inet_addr("127.0.0.1");
+
     char buf[512];
-    socklen_t len = sizeof(server);
+    socklen_t len=sizeof(server);
 
     // Step 1: Send DISCOVER
-    sendto(sock, "DISCOVER", 8, 0, (struct sockaddr*)&server, len);
+    sendto(sock,"discover",8,0,(struct sockaddr*)&server,len);
     printf("Sent: DISCOVER\n");
 
     // Step 2: Receive OFFER
-    recvfrom(sock, buf, sizeof(buf), 0, NULL, NULL);
-    printf("Server: %s\n", buf);
+    recvfrom(sock,buffer,sizeof(buffer),0,NULL,NULL);
+    printf("Server: %s\n", buffer);
 
     // Step 3: Send REQUEST
-    sendto(sock, "REQUEST 192.168.1.100", 22, 0, (struct sockaddr*)&server, len);
+     sendto(sock, "REQUEST 192.168.1.100", 22, 0, (struct sockaddr*)&server, len);
     printf("Sent: REQUEST\n");
 
     // Step 4: Receive ACK

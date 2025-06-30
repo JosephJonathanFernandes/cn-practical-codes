@@ -13,12 +13,12 @@ code[3]=code[4]^code[5]^code[6];
 }
 
 void checkHammingCode(int received[7]) {
-    int p1=received[0]^received[2]^received[4]^received[6];
-    int p2=received[1]^received[2]^received[5]^received[6];
-    int p4=received[3]^received[4]^received[5]^received[6];
+int p1=received[0]^received[2]^received[4]^received[6];
+int p2=received[1]^received[2]^received[5]^received[6];
+int p4=received[3]^received[4]^received[5]^received[6];
 
-    int error=p1*1+p2*2+4*p4;
-    if (error == 0) {
+int error=1*p1+2*p2+4*p4;
+if (error == 0) {
         cout << "No error detected.\n";
     } else {
         cout << "Error detected at position: " << error << "\n";
@@ -29,7 +29,6 @@ void checkHammingCode(int received[7]) {
         }
         cout << "\n";
     }
-
 }
 
 

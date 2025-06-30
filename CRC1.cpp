@@ -2,13 +2,14 @@
 #include <string>
 using namespace std;
 
+
 string xor1(const string &a,const string &b){
-    string result;
-     for (int i = 1; i < b.length(); i++)
-        result += (a[i] == b[i]) ? '0' : '1';
+    string result="";
+    for(int i=1;i<b.length();i++){ // from 1 not 0
+        result+=(a[i]==b[i])?'0':'1';
+    }
     return result;
 }
-
 
 string mod2div(string dividend, const string& divisor) {
 
@@ -22,16 +23,16 @@ string mod2div(string dividend, const string& divisor) {
     return tmp;
 }
 
+
 void transmitter() {
-    string data, key;
+    string data,key;
     cout << "Enter data: "; cin >> data;
     cout << "Enter key: ";  cin >> key;
 
-    string appended= data + string(key.length()-1,'0');
+    string appended=data+string(key.length()-1,'0');
     string rem=mod2div(appended,key);
-    cout << "Transmitted: " << data + rem << "\n";
+     cout << "Transmitted: " << data + rem << "\n";
 }
-
 
 void receiver() {
     string recv, key;
@@ -39,13 +40,13 @@ void receiver() {
     cout << "Key: ";      cin >> key;
 
     string rem=mod2div(recv,key);
-    if (rem.find('1') == string::npos) {
-        cout << " No Error\n";
+    if(rem.find('1')==string::npos){
+    cout << " No Error\n";
     } else {
         cout << " Error Detected\n";
     }
-}
 
+}
 
 
 

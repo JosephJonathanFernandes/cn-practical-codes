@@ -1,4 +1,3 @@
-// smtp_client.c
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -17,9 +16,8 @@ int main() {
 
     connect(sock, (struct sockaddr*)&server, sizeof(server));
 
-    // Receive greeting
-    int n = recv(sock, buffer, sizeof(buffer) - 1, 0);
-    buffer[n] = '\0';
+    int n=recv(sock,buffer,sizeof(buffer)-1,0);
+    buffer[n]='\0';
     printf("Server: %s", buffer);
 
     // Send HELO
@@ -58,6 +56,11 @@ int main() {
     buffer[n] = '\0';
     printf("Server: %s", buffer);
 
-    close(sock);
+
+    close(sock)
+
+
+
     return 0;
+
 }
