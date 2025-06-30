@@ -1,29 +1,31 @@
 #include <iostream>
 using namespace std;
 
-string binarySum(string a, string b) {
-    string sum(4, '0');  // Safe way to initialize
-    int carry = 0;
 
-    for (int i = 3; i >= 0; i--) {
-        int bit = (a[i] - '0') + (b[i] - '0') + carry;
-        sum[i] = (bit % 2) + '0';
-        carry = bit / 2;
+string binarySum(string a, string b){
+    string sum(4,'0');
+    int carry=0;
+    for(int i=3;i>=0;i--){
+        int bit=a[i]-'0'+b[i]-'0'+carry;
+        sum[i]=(bit%2)+'0'; ///its sum[i] not sum
+        carry=bit/2; //its bit here not sum
     }
-
-    while (carry) {
-        int bit = (sum[3] - '0') + carry;
-        sum[3] = (bit % 2) + '0';
-        carry = bit / 2;
+    while(carry){
+        int bit=sum[3]-'0'+carry;
+        sum[3]=(bit%2)+'0';
+        carry=bit/2; //its bit here not sum
     }
-
     return sum;
 }
 
-string onesComplement(string s) {
-    for (char &c : s) c = (c == '0') ? '1' : '0';
+
+string onesComplement(string s){
+    for(char &c:s){  //dont forget this reference &sign
+        c=(c=='0')?'1':'0';
+    }
     return s;
 }
+
 
 int main() {
     int choice;
