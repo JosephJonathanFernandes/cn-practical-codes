@@ -1,38 +1,40 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
-#define PORT 8081
+#include <string.h>
 
-int main() {
-    int sockfd;
+#define port 8081
+
+int main(){
+    int sock_fd;
+     char buffer[1024],filename[1024];
     struct sockaddr_in servaddr;
-    char filename[100], buffer[1024];
+    sock_fd=socket(AF_INET,SOCK_STREAM,0);
+    servaddr.sin_family=AF_INET;
+    servaddr.sin_port=htons(port);
+    servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+
+    connect(sock_fd,(struct sockaddr*)&servaddr,sizeof(servaddr));
     FILE *fp;
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 
     printf("Enter filename to upload: ");
     scanf("%s", filename);
-    write(sockfd, filename, sizeof(filename));
 
-    fp = fopen(filename, "r");
-    if (fp == NULL) {
-        printf("File not found!\n");
+    write(sock_fd,&filename,sizeof(filename));
+
+    fp=fopen(filename,"r");
+    if(fp==NULL){
+printf("File not found!\n");
         exit(1);
     }
 
-    while (fgets(buffer, sizeof(buffer), fp)) {
-        write(sockfd, buffer, strlen(buffer));
+    while(fgets(buffer,sizeof(buffer),fp)){
+        write(sock_fd,buffer,sizeof(buffer));
     }
 
     fclose(fp);
-    close(sockfd);
-    return 0;
-}
+    close(sock_fd);
+
+    return 0;}

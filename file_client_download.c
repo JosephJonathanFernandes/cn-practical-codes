@@ -1,32 +1,33 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
-#define PORT 8080
+#include <string.h>
 
-int main() {
-    int sockfd;
+#define port 8082
+
+int main(){
+    int sock_fd;
+     char buffer[1024],filename[1024];
     struct sockaddr_in servaddr;
-    char filename[100], buffer[1024];
+    sock_fd=socket(AF_INET,SOCK_STREAM,0);
+    servaddr.sin_family=AF_INET;
+    servaddr.sin_port=htons(port);
+    servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
+    connect(sock_fd,(struct sockaddr*)&servaddr,sizeof(servaddr));
+    FILE *fp;
 
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-
-    printf("Enter filename to download: ");
+    printf("Enter filename to upload: ");
     scanf("%s", filename);
-    write(sockfd, filename, sizeof(filename));
 
-    printf("File content:\n");
+    write(sock_fd,&filename,sizeof(filename));
+
+     printf("File content:\n");
     int n;
-    while ((n = read(sockfd, buffer, sizeof(buffer))) > 0) {
-        write(1, buffer, n);  // print to stdout
-    }
 
-    close(sockfd);
+    while((n=read(sock_fd,buffer,sizeof(buffer)))>0)
+    fwrite(buffer,1,n,stdout);
+
+    close(sock_fd);
+
     return 0;
 }

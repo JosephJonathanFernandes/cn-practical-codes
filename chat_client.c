@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <arpa/inet.h>
 
-#define PORT 9090
+#define PORT 8090
 
 void *receive(void *sock) {
     int fd = *(int*)sock;

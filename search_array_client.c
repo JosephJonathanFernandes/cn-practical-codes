@@ -17,7 +17,7 @@ int main(){
 
     connect(sock_fd,(struct sockaddr*)&servaddr,sizeof(servaddr));
 
-  int n;
+  int n,key,index,found;
     int arr[100];
  printf("Enter n: ");
     scanf("%d", &n);
@@ -26,19 +26,24 @@ int main(){
     for (int i = 0; i < n; i++)
         scanf("%d", &arr[i]);
 
-    
+    printf("Enter item to search: ");
+    scanf("%d", &key);
 
 
     write(sock_fd,&n,sizeof(n));
     write(sock_fd,arr,n*sizeof(int));
+    write(sock_fd,&key,sizeof(key));
     
 
-    read(sock_fd,arr,n*sizeof(int));
-     printf("Sorted array:\n");
-    for (int i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
-   
+    read(sock_fd,&found,sizeof(found));
+    read(sock_fd,&index,sizeof(index));
+    if(found && index!=-1){
+         printf(" found at index:%d",index);
+    }
+    else{
+        printf("not found");
+    }
+
     close(sock_fd);
     return 0;
 }
