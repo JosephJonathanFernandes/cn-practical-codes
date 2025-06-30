@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Check if a number is power of 2
+bool isPowerOfTwo(int x) {
+    return x && (!(x & (x - 1)));
+}
+
+// Function to generate Hamming code (even parity)
+void generateHammingCode(int data[], int m, int code[], int &r) {
+    r = 0;
+    while (pow(2, r) < (m + r + 1))
+        r++;
+
+    int totalBits = m + r;
+
+    // Initialize code array with 0
+    for (int i = 1, j = 0; i <= totalBits; i++) {
+        if (isPowerOfTwo(i))
+            code[i] = 0;  // Placeholder for parity
+        else
+            code[i] = data[j++];
+    }
+
+    // Calculate parity bits
+    for (int i = 0; i < r; i++) {
+        int pos = pow(2, i);
+        int parity = 0;
+        for (int j = 1; j <= totalBits; j++) {
+            if (j & pos)
+                parity ^= code[j];
+        }
+        code[pos] = parity;
+    }
+}
+
+// Function to detect and correct error in received code
+void detectAndCorrect(int code[], int totalBits, int r) {
+    int errorPos = 0;
+
+    for (int i = 0; i < r; i++) {
+        int pos = pow(2, i);
+        int parity = 0;
+        for (int j = 1; j <= totalBits; j++) {
+            if (j & pos)
+                parity ^= code[j];
+        }
+        if (parity)
+            errorPos += pos;
+    }
+
+    if (errorPos == 0) {
+        cout << "\nNo error detected in received code.\n";
+    } else {
+        cout << "\nError detected at position: " << errorPos << "\n";
+        code[errorPos] ^= 1; // Correct the bit
+        cout << "Corrected Hamming code:\n";
+        for (int i = totalBits; i >= 1; i--)
+            cout << code[i] << " ";
+        cout << "\n";
+    }
+}
+
+int main() {
+    int m;
+    cout << "Enter number of data bits: ";
+    cin >> m;
+
+    int data[50];
+    cout << "Enter the data bits (LSB to MSB):\n";
+    for (int i = m - 1; i >= 0; i--) {
+        cout << "Bit " << i + 1 << ": ";
+        cin >> data[i];
+    }
+
+    int code[100] = {0};
+    int r = 0;
+    generateHammingCode(data, m, code, r);
+
+    int totalBits = m + r;
+
+    cout << "\nGenerated Hamming Code (from MSB to LSB):\n";
+    for (int i = totalBits; i >= 1; i--)
+        cout << code[i] << " ";
+    cout << "\n";
+
+    // Simulate receiver
+    cout << "\nEnter the received code bits (position 1 to " << totalBits << "):\n";
+    for (int i = totalBits; i >= 1; i--) {
+        cout << "Bit " << i << ": ";
+        cin >> code[i];
+    }
+
+    detectAndCorrect(code, totalBits, r);
+
+    return 0;
+}
